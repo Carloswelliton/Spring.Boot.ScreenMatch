@@ -3,14 +3,18 @@ package br.com.alura.screenMatch.principal;
 import br.com.alura.screenMatch.models.DadosEpisodio;
 import br.com.alura.screenMatch.models.DadosSerie;
 import br.com.alura.screenMatch.models.DadosTemporada;
+import br.com.alura.screenMatch.models.Episodio;
 import br.com.alura.screenMatch.service.ConsumoApi;
 import br.com.alura.screenMatch.service.ConverteDados;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
 
 
 public class Principal {
@@ -57,6 +61,31 @@ public class Principal {
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
             .limit(5)
             .forEach(System.out::println);
+
+    List<Episodio> episodios = temporadas.stream()
+        .flatMap(t -> t.dadosEpisodios().stream()
+            .map(d -> new Episodio(t.temporada(), d)))
+        .collect(Collectors.toList());
+
+    episodios.forEach(System.out::println);
+
+    System.out.println("Digite uma data de inicio do episodio");
+
+    var ano = leitura.nextInt();
+    leitura.nextLine();
+
+    LocalDate dataBusca = LocalDate.of(ano ,1 ,1);
+
+    DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    episodios.stream()
+        .filter(e -> e.getDataDeLancamento() != null && e.getDataDeLancamento().isAfter(dataBusca))
+        .forEach(e -> System.out.println(
+            "Temporada: " + e.getTemporada() +
+                " Episodio: " + e.getTitulo() +
+                " Data de Lançamento: "+ e.getDataDeLancamento().format(formatador)
+        ));
+
 
 
   }
