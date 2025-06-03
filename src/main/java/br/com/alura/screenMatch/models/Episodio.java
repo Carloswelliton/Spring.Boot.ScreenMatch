@@ -70,7 +70,7 @@ public class Episodio {
 
   @Override
   public String toString() {
-    return "\ntemporada=" + temporada +
+    return "temporada=" + temporada +
         ", titulo='" + titulo + '\'' +
         ", numeroEpisodio=" + numeroEpisodio +
         ", avaliacao=" + avaliacao +
